@@ -13,3 +13,17 @@ The API linking playable plugins (game, scenarios, terrain generators) and the R
 - Preferred version: 1.8.8 Spigot
 
 - Lang: Kotlin (Correto | Temurin dev JVM)
+
+# Version Operation
+
+```
+Format: W.X.Y.Z
+
+W = Release Version
+
+X = 1: Alpha | 2: Beta | 3: Stable
+
+Y = Update Version
+
+Z = Patch Version
+```
