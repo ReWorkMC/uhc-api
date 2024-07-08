@@ -27,3 +27,16 @@ Y = Update Version
 
 Z = Patch Version
 ```
+# UML Class Diagram
+
+![UML Class Diagram](uml.png)
+
+### Additional information about UML
+
+GamePlugin : onGameStart method is called when the game starts. It follows the following steps:
+- Check if ServerState is OK, if not, return.
+- Call gtimer.start() to start game timer (on a new thread)
+- Call this.start() to start the game.
+- Change the game state to InGame
+
+GlobalTimer : start method is called when the game starts. It starts a new timer which is counting each second. Define a GlobalTimer in the API is needed for the Scoreboard Plugin to work properly.
