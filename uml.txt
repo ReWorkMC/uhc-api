@@ -1,0 +1,100 @@
+@startuml
+' -- GameState Definition Start --
+enum GameState
+class Wait <<open>>
+class InGame <<open>>
+class End <<open>>
+
+Wait --|> GameState
+InGame --|> GameState
+End --|> GameState
+' -- GameState Definition End --
+
+' -- GlobalTimer Definition Start --
+abstract GlobalTimer {
+    + <open> start()
+}
+
+class BukkitRunable
+GlobalTimer --|> BukkitRunable
+
+' -- GlobalTimer Definition End --
+
+' -- IGPlayer Definition Start --
+interface EffectControlInterface {
+    + veloMultiplicator: Float
+    + strenghtMultiplicator: Float
+    + resiMultiplicator: Float
+}
+
+interface PlayerInterface {
+    + uuid: UUID
+}
+
+PlayerInterface --> "1" EffectControlInterface
+
+abstract RoleType {
+    + key: String
+}
+
+interface RoleInterface {
+    + description: String
+    + key: String
+}
+
+RoleInterface --> "0..1" RoleType
+
+class NoRole
+
+interface IGPlayer
+
+IGPlayer --> "1" PlayerInterface
+
+NoRole --|> IGPlayer
+RoleInterface --|> IGPlayer
+' -- IGPlayer Definition End --
+
+' -- Listener+ConfigGUI+ServerState Definition Start --
+class Listener <<open>>
+
+class ConfigGUI
+
+class Inventory
+
+ConfigGUI --|> Inventory
+
+enum ServerState
+class OK
+class Generating
+class Blocked
+
+OK --|> ServerState
+Generating --|> ServerState
+Blocked --|> ServerState
+' -- Listener+ConfigGUI+ServerState Definition End --
+
+' -- GamePlugin Definition Start --
+abstract GamePlugin {
+    + name: String
+    + description: String
+    + dev: String
+    + link: String?
+    + <open> onGameStart()
+    + <abstract> start()
+}
+
+GamePlugin --> "1" GameState : state
+GamePlugin --> "1" GlobalTimer : gtimer
+GlobalTimer --> "1" GamePlugin : main
+GamePlugin --> "0..x" IGPlayer : igplist
+GamePlugin --> "1" ConfigGUI : configGUI
+ConfigGUI --> "1" GamePlugin : main
+GamePlugin --> "1" ServerState : serverState
+GamePlugin --> "2" Listener : configListener / gameListener
+Listener --> "1" GamePlugin : main
+
+abstract JavaPlugin
+GamePlugin --|> JavaPlugin
+
+' -- GamePlugin Definition End --
+@enduml
